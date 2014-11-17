@@ -16,6 +16,6 @@ public class Main {
 		Controlador controlador = new Controlador(partida, in);
 		controlador.run();
 	}
-	//comentario pra GIT
+	//joputaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
 
 }
