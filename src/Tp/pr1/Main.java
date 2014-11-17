@@ -16,11 +16,9 @@ public class Main {
 		Controlador controlador = new Controlador(partida, in);
 		controlador.run();
 	}
-<<<<<<< HEAD
-	//joputaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-=======
+
 	//comentario pra GIT
 	//otra linea
->>>>>>> origin/master
+
 
 }
