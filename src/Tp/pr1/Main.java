@@ -17,8 +17,5 @@ public class Main {
 		controlador.run();
 	}
 
-	//comentario pra GIT
-	//otra linea
-
-
+	//ARREGLA EL PUTO UNDOOOOOOO CABROOOOOOOOOOOON
 }
