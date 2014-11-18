@@ -34,18 +34,20 @@ public class Partida {
 	}
 	
 	private void desplazarArray(){
+		int aux = arrayJugadas[arrayJugadas.length-2];
 		for (int i = 0; i < arrayJugadas.length-1;i++) {
 			arrayJugadas[i] = arrayJugadas[i + 1];
+			System.out.print(i);
 		}
+		System.out.print("este es" + aux);
+		arrayJugadas[arrayJugadas.length-2] = aux+1;
 	}
 	
 	private void aumentarContador(){
-		System.out.println("contador: " +contadorArrayJugadas );
-		if (contadorArrayJugadas == 10) {
-			contadorArrayJugadas = 9;
+		System.out.println("contador antes aumento: " +contadorArrayJugadas );
+		if(contadorArrayJugadas > 10) {
 			desplazarArray();
 		}
-		++contadorArrayJugadas;
 		System.out.println("contador: " +contadorArrayJugadas );
 	}
 	public int getTablas(){
@@ -81,9 +83,17 @@ public class Partida {
 						turno = Ficha.BLANCA;
 					}
 					System.out.println("posicon del array antes de menter la columna: " + contadorArrayJugadas);
+					if (contadorArrayJugadas == 10) {
+						arrayJugadas[contadorArrayJugadas-1] = col;
+					}
+					else
+					{
 						arrayJugadas[contadorArrayJugadas] = col;
+						++contadorArrayJugadas;
+					}
+					
 						aumentarContador();
-					//mueves el array una posición a la izquierda
+					//mueves el array una posiciï¿½n a la izquierda
 					tablas++;
 				}
 			}
@@ -313,7 +323,7 @@ public class Partida {
 		Tablero NuevoTablero = new Tablero(5,5);
 		NuevoTablero.reset();
 		Partida nuevaPartida = new Partida(NuevoTablero);
-		for (int i = 0; i <= 5; i++) {		
+		for (int i = 1; i <= 6; i++) {		
 			for (int j = 0; j < nuevaPartida.arrayJugadas.length; j++) {
 				System.out.print(nuevaPartida.arrayJugadas[j]);
 			}
@@ -322,7 +332,8 @@ public class Partida {
 			NuevoTablero.pintarTablero();
 			System.out.println();
 		}
-		for (int i = 0; i <= 5; i++) {		
+		System.err.println("segundo bucle");
+		for (int i = 1; i <= 6; i++) {		
 			for (int j = 0; j < nuevaPartida.arrayJugadas.length; j++) {
 				System.out.print(nuevaPartida.arrayJugadas[j]);
 			}
@@ -331,7 +342,8 @@ public class Partida {
 			NuevoTablero.pintarTablero();
 			System.out.println();
 		}
-		for (int i = 0; i <= 5; ++i) {		
+		System.err.println("tercer bucle");
+		for (int i = 1; i <= 6; ++i) {		
 			for (int j = 0; j < nuevaPartida.arrayJugadas.length; j++) {
 				System.out.print(nuevaPartida.arrayJugadas[j]);
 			}
@@ -340,9 +352,7 @@ public class Partida {
 			NuevoTablero.pintarTablero();
 			System.out.println();
 		}
-		for (int i = 0; i <= 9; ++i) {
-			System.out.print(nuevaPartida.arrayJugadas[i]);
-		}
+		
 	}
 }
 
