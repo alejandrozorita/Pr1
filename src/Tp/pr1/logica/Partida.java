@@ -1,5 +1,6 @@
 package Tp.pr1.logica;
 
+
 public class Partida {
 	private Tablero tablero;
 	private Ficha turno;
@@ -30,25 +31,20 @@ public class Partida {
 		turno = Ficha.BLANCA;
 		contadorArrayJugadas = 0;
 		arrayJugadas[contadorArrayJugadas] = -1;
-		System.out.println(arrayJugadas[contadorArrayJugadas]);
 	}
 	
-	private void desplazarArray(){
-		int aux = arrayJugadas[arrayJugadas.length-2];
+	private void desplazarArray(int auxDesArray){
+		
 		for (int i = 0; i < arrayJugadas.length-1;i++) {
 			arrayJugadas[i] = arrayJugadas[i + 1];
-			System.out.print(i);
 		}
-		System.out.print("este es" + aux);
-		arrayJugadas[arrayJugadas.length-2] = aux+1;
+		arrayJugadas[arrayJugadas.length-2] = auxDesArray;
 	}
 	
-	private void aumentarContador(){
-		System.out.println("contador antes aumento: " +contadorArrayJugadas );
-		if(contadorArrayJugadas > 10) {
-			desplazarArray();
+	private void aumentarContador(int auxDesArray){
+		if(contadorArrayJugadas == 11) {
+			desplazarArray(auxDesArray);
 		}
-		System.out.println("contador: " +contadorArrayJugadas );
 	}
 	public int getTablas(){
 		return tablas;
@@ -76,23 +72,30 @@ public class Partida {
 					posible = false;
 				}
 				if (posible) {
+					int auxDesArray = 0;
 					tablero.setCasilla(col, tablero.fichaUltimaJugada(col) + 1, color);
 					if (turno == Ficha.BLANCA) {
 						turno = Ficha.NEGRA;
 					} else if(turno == Ficha.NEGRA) {
 						turno = Ficha.BLANCA;
 					}
-					System.out.println("posicon del array antes de menter la columna: " + contadorArrayJugadas);
+					
 					if (contadorArrayJugadas == 10) {
+						auxDesArray = arrayJugadas[contadorArrayJugadas-1];
 						arrayJugadas[contadorArrayJugadas-1] = col;
+						++contadorArrayJugadas;
+					}
+					else if (contadorArrayJugadas == 11)
+					{
+						auxDesArray = arrayJugadas[contadorArrayJugadas-2];
+						arrayJugadas[contadorArrayJugadas-2] = col;
 					}
 					else
 					{
 						arrayJugadas[contadorArrayJugadas] = col;
 						++contadorArrayJugadas;
 					}
-					
-						aumentarContador();
+						aumentarContador(auxDesArray);
 					//mueves el array una posici�n a la izquierda
 					tablas++;
 				}
@@ -117,23 +120,31 @@ public class Partida {
 	}
 	
 	public boolean undo(){
-		System.out.println(contadorArrayJugadas);
-		System.out.println("Columna a la que apunta: " + arrayJugadas[contadorArrayJugadas - 1]);
 		boolean ok = true;
-		if (arrayJugadas[contadorArrayJugadas] < 0) {
+		//Iniciamos contador para no machacar contador original de partida
+		int auxContadorArrayJugadas = 0;
+		
+		//Si contador es mayor que length de array es porque apunta a ultima direcccion
+		if (contadorArrayJugadas > arrayJugadas.length-1) {
+			auxContadorArrayJugadas = arrayJugadas.length-1;
+		}
+		else {
+			auxContadorArrayJugadas = contadorArrayJugadas;
+		}
+		if (arrayJugadas[auxContadorArrayJugadas] < 0) {
 			ok = false;
 		}
-		else if (turno == Ficha.BLANCA && contadorArrayJugadas == 0){
+		else if (turno == Ficha.BLANCA && auxContadorArrayJugadas == 0){
 			ok = false;
 		} 
-		else{
+		else{System.out.println("else");
 			//recibe la i-1 donde esta colocada la ficha que hay que deshacer
-			int posicionUltimaFichaEnI = (tablero.fichaUltimaJugada(arrayJugadas[contadorArrayJugadas - 1] + 1));
+			int posicionUltimaFichaEnI = (tablero.fichaUltimaJugada(arrayJugadas[auxContadorArrayJugadas - 1] + 1));
 			//Pasamos X e Y a tablero para que ponga vacia en la posicion de la ultima jugada
 
-			tablero.setCasilla(/*Pasamos la x*/arrayJugadas[contadorArrayJugadas - 1], /*Pasamos la i*/(posicionUltimaFichaEnI + 1), /*Pasamos la vacia*/Ficha.VACIA);
+			tablero.setCasilla(/*Pasamos la x*/arrayJugadas[auxContadorArrayJugadas - 1], /*Pasamos la i*/(posicionUltimaFichaEnI + 1), /*Pasamos la vacia*/Ficha.VACIA);
 			//Ponemos a -1 launcher posicion del array
-			arrayJugadas[contadorArrayJugadas] = -1;
+			arrayJugadas[auxContadorArrayJugadas] = -1;
 			disminuirContador();
 			tablas--;
 			setTurno();
@@ -320,6 +331,7 @@ public class Partida {
 		return turno;
 	}
 	public static void main(String[] args) {
+		
 		Tablero NuevoTablero = new Tablero(5,5);
 		NuevoTablero.reset();
 		Partida nuevaPartida = new Partida(NuevoTablero);
@@ -330,7 +342,7 @@ public class Partida {
 			System.out.println();
 			nuevaPartida.ejecutaMovimiento(nuevaPartida.getTurno(), i);
 			NuevoTablero.pintarTablero();
-			System.out.println();
+			System.out.println("-----------------");
 		}
 		System.err.println("segundo bucle");
 		for (int i = 1; i <= 6; i++) {		
@@ -340,7 +352,7 @@ public class Partida {
 			System.out.println();
 			nuevaPartida.ejecutaMovimiento(nuevaPartida.getTurno(), i);
 			NuevoTablero.pintarTablero();
-			System.out.println();
+			System.out.println("---------------");
 		}
 		System.err.println("tercer bucle");
 		for (int i = 1; i <= 6; ++i) {		
@@ -350,7 +362,12 @@ public class Partida {
 			System.out.println();
 			nuevaPartida.ejecutaMovimiento(nuevaPartida.getTurno(), i);
 			NuevoTablero.pintarTablero();
-			System.out.println();
+			System.out.println("----------------");
+		}
+		for (int i = 0; i < 11; i++) {
+			System.out.println("undo!");
+			nuevaPartida.undo();
+			NuevoTablero.pintarTablero();
 		}
 		
 	}
