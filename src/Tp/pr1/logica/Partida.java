@@ -125,7 +125,7 @@ public class Partida {
 		int auxContadorArrayJugadas = 0;
 		
 		//Si contador es mayor que length de array es porque apunta a ultima direcccion
-		if (contadorArrayJugadas > arrayJugadas.length-1) {
+		if (contadorArrayJugadas > arrayJugadas.length - 1) {
 			auxContadorArrayJugadas = arrayJugadas.length-1;
 		}
 		else {
@@ -139,12 +139,13 @@ public class Partida {
 		} 
 		else{System.out.println("else");
 			//recibe la i-1 donde esta colocada la ficha que hay que deshacer
-			int posicionUltimaFichaEnI = (tablero.fichaUltimaJugada(arrayJugadas[auxContadorArrayJugadas - 1] + 1));
+			int posicionUltimaFichaEnI = (tablero.fichaUltimaJugada(arrayJugadas[auxContadorArrayJugadas - 1]+1));
 			//Pasamos X e Y a tablero para que ponga vacia en la posicion de la ultima jugada
 
-			tablero.setCasilla(/*Pasamos la x*/arrayJugadas[auxContadorArrayJugadas - 1], /*Pasamos la i*/(posicionUltimaFichaEnI + 1), /*Pasamos la vacia*/Ficha.VACIA);
+			tablero.setCasilla(/*Pasamos la x*/arrayJugadas[auxContadorArrayJugadas - 1] + 1, /*Pasamos la i*/(posicionUltimaFichaEnI + 2), /*Pasamos la vacia*/Ficha.VACIA);
 			//Ponemos a -1 launcher posicion del array
 			arrayJugadas[auxContadorArrayJugadas] = -1;
+			contadorArrayJugadas = auxContadorArrayJugadas;
 			disminuirContador();
 			tablas--;
 			setTurno();
