@@ -40,6 +40,7 @@ public class UndoTest {
 		for (int i = 0; i < 10; ++i) {
 			Ficha turno = p.getTurno();
 			assertTrue("El undo debería poder hacerse al menos 10 veces.", p.undo());
+			p.getTablero().pintarTablero();
 			assertTrue("Tras undo el turno no cambio.", turno != p.getTurno());
 			assertFalse(p.isTerminada());
 		}

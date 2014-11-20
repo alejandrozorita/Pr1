@@ -81,14 +81,14 @@ public class Partida {
 					}
 					
 					if (contadorArrayJugadas == 10) {
-						auxDesArray = arrayJugadas[contadorArrayJugadas-1];
-						arrayJugadas[contadorArrayJugadas-1] = col;
-						++contadorArrayJugadas;
+						auxDesArray = contadorArrayJugadas-1;
+						arrayJugadas[auxDesArray] = col;
+
 					}
 					else if (contadorArrayJugadas == 11)
 					{
-						auxDesArray = arrayJugadas[contadorArrayJugadas-2];
-						arrayJugadas[contadorArrayJugadas-2] = col;
+						auxDesArray = contadorArrayJugadas - 2;
+						arrayJugadas[auxDesArray] = col;
 					}
 					else
 					{
@@ -139,12 +139,12 @@ public class Partida {
 		} 
 		else{System.out.println("else");
 			//recibe la i-1 donde esta colocada la ficha que hay que deshacer
-			int posicionUltimaFichaEnI = (tablero.fichaUltimaJugada(arrayJugadas[auxContadorArrayJugadas]));
+			int posicionUltimaFichaEnI = (tablero.fichaUltimaJugada(arrayJugadas[auxContadorArrayJugadas - 1]));
 			//Pasamos X e Y a tablero para que ponga vacia en la posicion de la ultima jugada
 
-			tablero.setCasilla(/*Pasamos la x*/arrayJugadas[auxContadorArrayJugadas], /*Pasamos la i*/(posicionUltimaFichaEnI + 2), /*Pasamos la vacia*/Ficha.VACIA);
+			tablero.setCasilla(/*Pasamos la x*/arrayJugadas[auxContadorArrayJugadas - 1], /*Pasamos la i*/(posicionUltimaFichaEnI + 2), /*Pasamos la vacia*/Ficha.VACIA);
 			//Ponemos a -1 launcher posicion del array
-			arrayJugadas[auxContadorArrayJugadas] = -1;
+			arrayJugadas[auxContadorArrayJugadas-1] = -1;
 			contadorArrayJugadas = auxContadorArrayJugadas;
 			disminuirContador();
 			tablas--;
@@ -258,17 +258,18 @@ public class Partida {
 		fila = GetFilaUltimoMovimiento() + 2;
 		columna = GetColumnaUltimoMovimiento();
 		//COMPROBAR DIAGONAL HACIA ARRIBA DERECHA
-		int diagonalArriDerOk = 0;
+		int diagonalMayor = 0;
+		int diagonalMenor = 0;
 			while ((fila > 0) && (columna < tablero.getAncho())) {
 				casilla = tablero.getCasilla(columna, fila);
 				siguienteCasilla = tablero.getCasilla(columna +1, fila - 1);
 				if ((casilla.equals(siguienteCasilla)) && (!casilla.equals(Ficha.VACIA))) {
-					diagonalArriDerOk++;
+					diagonalMayor++;
 				}
 				fila--;
 				columna++;		
 			}
-		if (diagonalArriDerOk >= 3) {
+		if (diagonalMayor >= 3) {
 			ok = true;
 		}
 		//COMPROBAR DIAGONAL HACIA ARRIBA IZQUIERDA	
@@ -278,12 +279,12 @@ public class Partida {
 			casilla = tablero.getCasilla(columna, fila);
 			siguienteCasilla = tablero.getCasilla(columna -1, fila - 1);
 			if ((casilla.equals(siguienteCasilla)) && (!casilla.equals(Ficha.VACIA))) {
-				diagonalArriDerOk++;
+				diagonalMenor++;
 			}
 			fila--;
 			columna--;		
 		}
-		if (diagonalArriDerOk >= 3) {
+		if (diagonalMenor >= 3) {
 			ok = true;
 		}
 		//COMPROBAR DIAGONAL ABAJO IZQUIERDA
@@ -293,12 +294,12 @@ public class Partida {
 			casilla = tablero.getCasilla(columna, fila);
 			siguienteCasilla = tablero.getCasilla(columna -1, fila +1);
 			if ((casilla.equals(siguienteCasilla)) && (!casilla.equals(Ficha.VACIA))) {
-				diagonalArriDerOk++;
+				diagonalMayor++;
 			}
 			fila++;
 			columna--;		
 		}
-		if (diagonalArriDerOk >= 3) {
+		if (diagonalMayor >= 3) {
 			ok = true;
 		}
 		//COMPROBAR DIAGONAL ABAJO DERECHA
@@ -308,12 +309,12 @@ public class Partida {
 			casilla = tablero.getCasilla(columna, fila);
 			siguienteCasilla = tablero.getCasilla(columna +1, fila +1);
 			if ((casilla.equals(siguienteCasilla)) && (!casilla.equals(Ficha.VACIA))) {
-				diagonalArriDerOk++;
+				diagonalMenor++;
 			}
 			fila++;
 			columna++;		
 		}
-		if (diagonalArriDerOk >= 3) {
+		if (diagonalMenor >= 3) {
 			ok = true;
 		}
 
