@@ -134,15 +134,15 @@ public class Partida {
 		if (arrayJugadas[auxContadorArrayJugadas] < 0) {
 			ok = false;
 		}
-		else if (turno == Ficha.BLANCA && auxContadorArrayJugadas == 0){
+		else if (turno == Ficha.BLANCA && auxContadorArrayJugadas == 0 && tablas == 0){
 			ok = false;
 		} 
 		else{System.out.println("else");
 			//recibe la i-1 donde esta colocada la ficha que hay que deshacer
-			int posicionUltimaFichaEnI = (tablero.fichaUltimaJugada(arrayJugadas[auxContadorArrayJugadas - 1]+1));
+			int posicionUltimaFichaEnI = (tablero.fichaUltimaJugada(arrayJugadas[auxContadorArrayJugadas]));
 			//Pasamos X e Y a tablero para que ponga vacia en la posicion de la ultima jugada
 
-			tablero.setCasilla(/*Pasamos la x*/arrayJugadas[auxContadorArrayJugadas - 1] + 1, /*Pasamos la i*/(posicionUltimaFichaEnI + 2), /*Pasamos la vacia*/Ficha.VACIA);
+			tablero.setCasilla(/*Pasamos la x*/arrayJugadas[auxContadorArrayJugadas], /*Pasamos la i*/(posicionUltimaFichaEnI + 2), /*Pasamos la vacia*/Ficha.VACIA);
 			//Ponemos a -1 launcher posicion del array
 			arrayJugadas[auxContadorArrayJugadas] = -1;
 			contadorArrayJugadas = auxContadorArrayJugadas;
@@ -175,7 +175,10 @@ public class Partida {
 		if (tablas == 0) {
 			terminada = false;
 		}
-		else if (comprobarAncho() || comprobarAlto() || comprobarDiagonal() || getTablas() == getTablero().getAlto() *getTablero().getAncho()) {
+		else if (comprobarAncho() || comprobarAlto() || comprobarDiagonal()) {
+			terminada = true;
+		}
+		else if (tablas == getTablero().getAlto() *getTablero().getAncho()) {
 			terminada = true;
 		}
 		else if (contadorArrayJugadas == 0) {
@@ -336,7 +339,7 @@ public class Partida {
 		Tablero NuevoTablero = new Tablero(5,5);
 		NuevoTablero.reset();
 		Partida nuevaPartida = new Partida(NuevoTablero);
-		for (int i = 1; i <= 6; i++) {		
+		/*for (int i = 1; i <= 6; i++) {		
 			for (int j = 0; j < nuevaPartida.arrayJugadas.length; j++) {
 				System.out.print(nuevaPartida.arrayJugadas[j]);
 			}
@@ -370,7 +373,12 @@ public class Partida {
 			nuevaPartida.undo();
 			NuevoTablero.pintarTablero();
 		}
-		
+		System.out.println(nuevaPartida.getTablas());
+	*/
+		nuevaPartida.ejecutaMovimiento(nuevaPartida.getTurno(), 1);
+		NuevoTablero.pintarTablero();
+		nuevaPartida.undo();
+		NuevoTablero.pintarTablero();
 	}
 }
 
