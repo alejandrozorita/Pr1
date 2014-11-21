@@ -31,17 +31,20 @@ public class UndoTest {
 	public void testUndo10Veces() {		
 		for (int i = 1; i <= 3; ++i)
 			for (int x = 1; x <= 7; ++x) {
-				System.out.println(i + " " + x);
 				p.ejecutaMovimiento(p.getTurno(), x);
 				p.getTablero().pintarTablero();
+				for (int j = 0; j < p.arrayJugadas.length; j++) {
+					System.out.print(p.arrayJugadas[j]);
+				}
 				assertFalse(p.isTerminada());
 			}
 		
 		for (int i = 0; i < 10; ++i) {
 			Ficha turno = p.getTurno();
+			System.out.println(p.getContadorArrayJugadas());
 			assertTrue("El undo debería poder hacerse al menos 10 veces.", p.undo());
-			p.getTablero().pintarTablero();
 			assertTrue("Tras undo el turno no cambio.", turno != p.getTurno());
+			p.getTablero().pintarTablero();
 			assertFalse(p.isTerminada());
 		}
 		

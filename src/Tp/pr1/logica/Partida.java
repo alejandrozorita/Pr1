@@ -6,9 +6,10 @@ public class Partida {
 	private Ficha turno;
 	private boolean terminada;
 	private Ficha ganador;
-	private int [] arrayJugadas;
+	public int [] arrayJugadas;
 	private int contadorArrayJugadas = 0;
 	private int tablas = 0;
+	private boolean reseteada = false;
 	
 	public Partida(Tablero tablero){
 		this.tablero = tablero;
@@ -31,19 +32,19 @@ public class Partida {
 		turno = Ficha.BLANCA;
 		contadorArrayJugadas = 0;
 		arrayJugadas[contadorArrayJugadas] = -1;
+		reseteada = true;
 	}
 	
-	private void desplazarArray(int auxDesArray){
+	private void desplazarArray(){
 		
 		for (int i = 0; i < arrayJugadas.length-1;i++) {
 			arrayJugadas[i] = arrayJugadas[i + 1];
 		}
-		arrayJugadas[arrayJugadas.length-2] = auxDesArray;
 	}
 	
-	private void aumentarContador(int auxDesArray){
+	private void aumentarContador(){
 		if(contadorArrayJugadas == 11) {
-			desplazarArray(auxDesArray);
+			desplazarArray();
 		}
 	}
 	public int getTablas(){
@@ -66,12 +67,14 @@ public class Partida {
 
 	public boolean ejecutaMovimiento(Ficha color, int col){
 		boolean posible = true;
+		int auxContadorArrayJugadas = 0;
 		if(terminada == false){	
 			if (col > 0 && col < tablero.getAncho()+1) {	
 				if ((turno == Ficha.VACIA) ||(turno != color) || (tablero.fichaUltimaJugada(col) < 0)) {
 					posible = false;
 				}
 				if (posible) {
+					reseteada = false;
 					int auxDesArray = 0;
 					tablero.setCasilla(col, tablero.fichaUltimaJugada(col) + 1, color);
 					if (turno == Ficha.BLANCA) {
@@ -81,21 +84,24 @@ public class Partida {
 					}
 					
 					if (contadorArrayJugadas == 10) {
-						auxDesArray = contadorArrayJugadas-1;
-						arrayJugadas[auxDesArray] = col;
+						desplazarArray();
+						auxContadorArrayJugadas = contadorArrayJugadas;
+						arrayJugadas[auxContadorArrayJugadas -1] = col;
+						
+
 
 					}
 					else if (contadorArrayJugadas == 11)
 					{
-						auxDesArray = contadorArrayJugadas - 2;
-						arrayJugadas[auxDesArray] = col;
+						auxContadorArrayJugadas = contadorArrayJugadas - 2;
+						arrayJugadas[auxContadorArrayJugadas] = col;
 					}
 					else
 					{
 						arrayJugadas[contadorArrayJugadas] = col;
 						++contadorArrayJugadas;
 					}
-						aumentarContador(auxDesArray);
+						aumentarContador();
 					//mueves el array una posici�n a la izquierda
 					tablas++;
 				}
@@ -115,40 +121,49 @@ public class Partida {
 	
 	private int GetFilaUltimoMovimiento(){
 		int fila = 0;
+		if(contadorArrayJugadas == 0)
+			contadorArrayJugadas = 1;
 		fila = tablero.fichaUltimaJugada(arrayJugadas[contadorArrayJugadas - 1]);
 		return fila;
 	}
 	
 	public boolean undo(){
 		boolean ok = true;
-		//Iniciamos contador para no machacar contador original de partida
-		int auxContadorArrayJugadas = 0;
-		
-		//Si contador es mayor que length de array es porque apunta a ultima direcccion
-		if (contadorArrayJugadas > arrayJugadas.length - 1) {
-			auxContadorArrayJugadas = arrayJugadas.length-1;
-		}
-		else {
-			auxContadorArrayJugadas = contadorArrayJugadas;
-		}
-		if (arrayJugadas[auxContadorArrayJugadas] < 0) {
+		if (turno == Ficha.BLANCA && contadorArrayJugadas == 0 && tablas == 0){
 			ok = false;
 		}
-		else if (turno == Ficha.BLANCA && auxContadorArrayJugadas == 0 && tablas == 0){
+		else if(reseteada) {
 			ok = false;
-		} 
-		else{System.out.println("else");
-			//recibe la i-1 donde esta colocada la ficha que hay que deshacer
-			int posicionUltimaFichaEnI = (tablero.fichaUltimaJugada(arrayJugadas[auxContadorArrayJugadas - 1]));
-			//Pasamos X e Y a tablero para que ponga vacia en la posicion de la ultima jugada
-
-			tablero.setCasilla(/*Pasamos la x*/arrayJugadas[auxContadorArrayJugadas - 1], /*Pasamos la i*/(posicionUltimaFichaEnI + 2), /*Pasamos la vacia*/Ficha.VACIA);
-			//Ponemos a -1 launcher posicion del array
-			arrayJugadas[auxContadorArrayJugadas-1] = -1;
-			contadorArrayJugadas = auxContadorArrayJugadas;
-			disminuirContador();
-			tablas--;
-			setTurno();
+		}
+		else{
+			if(contadorArrayJugadas == 0 && arrayJugadas[0] == -1){}
+			//Iniciamos contador para no machacar contador original de partida
+			int auxContadorArrayJugadas = 0;
+			
+			//Si contador es mayor que length de array es porque apunta a ultima direcccion
+			if (contadorArrayJugadas > arrayJugadas.length - 1) {
+				auxContadorArrayJugadas = arrayJugadas.length;
+			}
+			else {
+				auxContadorArrayJugadas = contadorArrayJugadas;
+			}
+			if (arrayJugadas[auxContadorArrayJugadas -1] < 0) {
+				ok = false;
+			}
+			else{System.out.println("else");
+	 			int posicionUltimaFichaEnI = (tablero.fichaUltimaJugada(arrayJugadas[contadorArrayJugadas - 1]));
+	 			System.out.println("despues de posicion ultima jugada");
+				//Pasamos X e Y a tablero para que ponga vacia en la posicion de la ultima jugada
+	
+				tablero.setCasilla(/*Pasamos la x*/arrayJugadas[contadorArrayJugadas - 1], /*Pasamos la i*/(posicionUltimaFichaEnI + 2), /*Pasamos la vacia*/Ficha.VACIA);
+				System.out.println("despues de set");
+				//Ponemos a -1 launcher posicion del array
+				arrayJugadas[contadorArrayJugadas-1] = -1;
+				contadorArrayJugadas = auxContadorArrayJugadas;
+				disminuirContador();
+				tablas--;
+				setTurno();
+			}
 		}
 		return ok;
 	}
@@ -172,7 +187,7 @@ public class Partida {
 	
 	public boolean isTerminada() {
 		terminada = false;
-		if (tablas == 0) {
+		if (tablas == 0 || contadorArrayJugadas == 0) {
 			terminada = false;
 		}
 		else if (comprobarAncho() || comprobarAlto() || comprobarDiagonal()) {
